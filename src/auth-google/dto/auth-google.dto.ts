@@ -10,22 +10,7 @@ export class GoogleLoginRequestDto {
   idToken!: string;
 }
 
-// RESPONSE DTO
-class GoogleUserResponse {
-  @ApiProperty({ example: '1' })
-  id!: string;
-
-  @ApiProperty({ example: 'admin@test.com' })
-  email!: string;
-
-  @ApiProperty({ example: 'Admin User' })
-  name!: string;
-}
-
 export class GoogleLoginResponseDto {
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   access_token!: string;
-
-  @ApiProperty({ type: GoogleUserResponse })
-  user!: GoogleUserResponse;
 }

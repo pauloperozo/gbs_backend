@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtHelperService } from '../shared/services/jwt-helper.service';
 import { UsersService } from '../users/users.service';
 import { LoginRequestDto } from './dto/auth-login.dto';
 import { AUTH_MESSAGES } from '../shared/constants/auth.constants';
@@ -7,7 +7,7 @@ import { AUTH_MESSAGES } from '../shared/constants/auth.constants';
 @Injectable()
 export class AuthLoginService {
   constructor(
-    private readonly jwtService: JwtService,
+    private readonly jwtHelperService: JwtHelperService,
     private readonly usersService: UsersService,
   ) {}
 
@@ -18,15 +18,6 @@ export class AuthLoginService {
       throw new UnauthorizedException(AUTH_MESSAGES.ERRORS.INVALID_CREDENTIALS);
     }
 
-    const payload = { sub: user.id, email: user.email };
-    
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-      },
-    };
+    return this.jwtHelperService.generateAuthResponse(user);
   }
 }

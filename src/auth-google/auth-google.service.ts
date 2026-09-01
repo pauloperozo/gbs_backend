@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtHelperService } from '../shared/services/jwt-helper.service';
 import { ConfigService } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import { UsersService } from '../users/users.service';
@@ -12,7 +12,7 @@ export class AuthGoogleService {
   private clientId: string;
 
   constructor(
-    private readonly jwtService: JwtService,
+    private readonly jwtHelperService: JwtHelperService,
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
   ) {
@@ -39,16 +39,7 @@ export class AuthGoogleService {
         throw new UnauthorizedException(AUTH_MESSAGES.ERRORS.USER_NOT_REGISTERED);
       }
 
-      const jwtPayload = { sub: user.id, email: user.email };
-
-      return {
-        access_token: this.jwtService.sign(jwtPayload),
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        }
-      };
+      return this.jwtHelperService.generateAuthResponse(user);
     } catch (error) {
       if (error instanceof UnauthorizedException || error instanceof BadRequestException) {
         throw error;
