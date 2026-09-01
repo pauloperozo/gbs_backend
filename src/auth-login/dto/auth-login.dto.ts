@@ -14,22 +14,7 @@ export class LoginRequestDto {
   password!: string;
 }
 
-// RESPONSE DTO
-class UserResponse {
-  @ApiProperty({ example: '1' })
-  id!: string;
-
-  @ApiProperty({ example: 'admin@test.com' })
-  email!: string;
-
-  @ApiProperty({ example: 'Admin User' })
-  name!: string;
-}
-
 export class LoginResponseDto {
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   access_token!: string;
-
-  @ApiProperty({ type: UserResponse })
-  user!: UserResponse;
 }
