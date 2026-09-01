@@ -17,26 +17,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, swaggerServerlessOptions);
 
-  return app;
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
 }
-
-let cachedApp: any;
-
-export default async function handler(req: any, res: any) {
-  if (!cachedApp) {
-    const app = await bootstrap();
-    await app.init();
-    cachedApp = app.getHttpAdapter().getInstance();
-  }
-  return cachedApp(req, res);
-}
-
-// Para desarrollo local
-if (!process.env.VERCEL) {
-  bootstrap().then((app) => {
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => {
-      console.log(`Server running locally on port ${port}`);
-    });
-  });
-}
+bootstrap();
