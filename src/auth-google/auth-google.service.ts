@@ -28,7 +28,7 @@ export class AuthGoogleService {
       });
 
       const payload = ticket.getPayload();
-      
+
       if (!payload || !payload.email) {
         throw new BadRequestException(AUTH_MESSAGES.ERRORS.INVALID_GOOGLE_TOKEN);
       }
@@ -39,7 +39,14 @@ export class AuthGoogleService {
         throw new UnauthorizedException(AUTH_MESSAGES.ERRORS.USER_NOT_REGISTERED);
       }
 
-      return this.jwtHelperService.generateAuthResponse(user);
+      let { access_token } = this.jwtHelperService.generateAuthResponse(user);
+
+      return {
+        id: user.id,
+        email: user.email,
+        access_token,
+      };
+
     } catch (error) {
       if (error instanceof UnauthorizedException || error instanceof BadRequestException) {
         throw error;
